@@ -208,7 +208,7 @@ namespace ServerCommonModule.Database
 
         private async Task<IDataReader> ExecuteReader(DbCommand dbCommand, params IDataParameter[] parameters)
         {
-            DbDataReader dataReader = null;
+            DbDataReader dataReader ;
 
 
             for (int i = 1; i < DatabaseErrorsMaskManagerMaxRetries; i++)
