@@ -7,8 +7,26 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="ControlModule\" />
-    <Folder Include="ImageManagement\" />
+    <PackageReference Include="Cave.Avatar" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ServerCommonModule\ServerCommonModule.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Properties\strings.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>strings.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

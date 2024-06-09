@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UserDomain.model;
 using UserDomain.Properties;
+using TableAttribute = ServerCommonModule.Attributes.TableAttribute;
 
 namespace UserDomain.Model
 {

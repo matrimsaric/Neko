@@ -1,4 +1,4 @@
-﻿namespace UserDomain
+﻿namespace ServerCommonModule
 {
     public class Class1
     {

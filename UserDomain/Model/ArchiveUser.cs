@@ -12,6 +12,7 @@ using UserDomain.Properties;
 using UserDomain.model;
 using UserDomain.ControlModule.Interfaces;
 using System.ComponentModel.DataAnnotations.Schema;
+using TableAttribute = ServerCommonModule.Attributes.TableAttribute;
 
 namespace UserDomain.Model
 {
