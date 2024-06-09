@@ -101,7 +101,6 @@ namespace ServerCommonModule.Database
             int rowsAffected = 0;
             object singleResult = null;
             DbDataReader dataReader = null;
-
             try
             {
                 switch (executeMode)
