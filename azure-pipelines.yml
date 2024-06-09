@@ -1,0 +1,10 @@
+trigger:
+- '*'
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+- task: gitmirror@0
+  inputs:
+    GitRepoUrl: 'https://github.com/matrimsaric/Neko.git'
