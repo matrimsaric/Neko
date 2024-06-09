@@ -29,10 +29,6 @@ namespace ServerCommonModule.Database
         public HashSet<string> DatabaseErrorsMaskManagerErrorCodes { get { return _dbUtilityParameter.DatabaseErrorsMaskManagerErrorCodes; } }
 
         protected abstract bool ContainsAnErrorToCheck(DbException dbException);
-
-
-
-
         private readonly IDbUtilityParameter _dbUtilityParameter = dbUtilityParameter;
         private readonly IEnvironmentalParameters _environmentalParameters = environmentalParameters;
 
