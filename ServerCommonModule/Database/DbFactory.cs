@@ -19,9 +19,7 @@ namespace ServerCommonModule.Database
             DbUtilityParameter dbParams = new()
             {
                 ConnectionString = connectionString
-
-
-                
+                // TEST COMMENT
             };
             
             switch (connectionType)
