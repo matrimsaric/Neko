@@ -19,6 +19,9 @@ namespace ServerCommonModule.Database
             DbUtilityParameter dbParams = new()
             {
                 ConnectionString = connectionString
+
+
+                
             };
             
             switch (connectionType)
