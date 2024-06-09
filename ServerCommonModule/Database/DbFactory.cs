@@ -20,8 +20,7 @@ namespace ServerCommonModule.Database
             {
                 ConnectionString = connectionString
             };
-
-
+            
             switch (connectionType)
             {
                 case ConnectionType.POSTGRESS:
