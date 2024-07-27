@@ -18,6 +18,8 @@ namespace UserDomain.ControlModule.Interfaces
 
         public Task<string> DeleteUser(PrimeUser deleteUser, bool reload = true);
 
+        public Task<string> SaveUser(PrimeUser saveUser, bool reload = true);
+
         public Task<PrimeUser> GetUserFromGuid(Guid guid, bool reload = true);
         public Task<PrimeUserCollection> GetAllActiveUsers(bool reload = true);
 

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserDomain", "UserDomain\UserDomain.csproj", "{68252C9D-7B31-484B-8C4F-959DCA9FA91F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserDomain", "UserDomain\UserDomain.csproj", "{68252C9D-7B31-484B-8C4F-959DCA9FA91F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerCommonModule", "ServerCommonModule\ServerCommonModule.csproj", "{67E9EE0C-5B74-474C-A57B-6DE1ACA04B3E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServerCommonModule", "ServerCommonModule\ServerCommonModule.csproj", "{67E9EE0C-5B74-474C-A57B-6DE1ACA04B3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -113,19 +113,58 @@ namespace UserDomain.ControlModule
         {
             string status = System.String.Empty;
             PrimeUserCollection primeUsers = await LoadCollection(reload);
-            ArchiveUserCollection? archiveUsers = await LoadArchiveCollection(reload);
             // uniqueness check first
 
-            List<PrimeUser> duplicates = primeUsers.Where(x => (x.Code == newUser.Code || x.Tag == newUser.Tag) && x.Id != newUser.Id).ToList();
-            List<ArchiveUser> archivedDuplicates = archiveUsers.Where(x => (x.Code == newUser.Code || x.Tag == newUser.Tag) && x.Id != newUser.Id).ToList();
-
-            if (duplicates.Count > 0) status = Properties.strings.DuplicateUserTagStatus;
-            else if (archivedDuplicates.Count > 0) status = Properties.strings.DuplicateArchivedUserTagStatus;
-            else
+            status = await CheckForDuplicates(newUser, reload, false);
+            if (string.IsNullOrEmpty(status))
             {
                 newUser.ThumbnailUrl = thumbnailGenerator.CreateNewThumbnail(newUser.Tag);
                 primeUsers.Add(newUser);
                 await primeUserManager.InsertSingleItem(newUser);
+            }          
+
+            return status;
+        }
+
+        public async Task <string> SaveUser(PrimeUser userToSave, bool reload = true)
+        {
+            string status = System.String.Empty;
+            PrimeUserCollection primeUsers = await LoadCollection(reload);
+           
+            // get the current user
+            PrimeUser currentUser = primeUsers.FindById(userToSave.Id);
+            if (currentUser != null)
+            {
+                // compare to look for difference in key fields
+                bool tagChanged = (currentUser.Tag != userToSave.Tag);
+                bool nameChanged = (currentUser.Name != userToSave.Name);
+                bool codeChanged = (currentUser.Code != userToSave.Code);
+
+                if (tagChanged || nameChanged || codeChanged)
+                {
+
+                    status = await CheckForDuplicates(userToSave, reload, false);
+                    if (string.IsNullOrEmpty(status))
+                    {
+                        // we can save. Let's do so by deleting the original then  re-adding the new
+                        await DeleteUser(currentUser);
+
+                        // then recreate
+                        primeUsers.Add(userToSave);
+                        await primeUserManager.InsertSingleItem(userToSave);
+                    }
+
+
+                }
+                else
+                {
+                    // do nothing they have 'saved' the same data
+                }
+            }
+            else
+            {
+                // no user found - save is for existing
+                status = "Failed to match User to save";
             }
 
 
@@ -135,13 +174,10 @@ namespace UserDomain.ControlModule
         public async Task<string> ArchiveUser(PrimeUser archiveThisUser, bool reload = true)
         {
             string status = System.String.Empty;
-            PrimeUserCollection primeUsers = await LoadCollection(reload);
             ArchiveUserCollection archiveUsers = await LoadArchiveCollection(reload);
-            // uniqueness check first
-            List<ArchiveUser> archivedDuplicates = archiveUsers.Where(x => (x.Code == archiveThisUser.Code || x.Tag == archiveThisUser.Tag || x.Id == archiveThisUser.Id)).ToList();
 
-            if (archivedDuplicates.Count > 0) status = Properties.strings.DuplicateArchivedUserTagStatus;
-            else
+            status = await CheckForDuplicates(archiveThisUser, reload, true);
+            if (string.IsNullOrEmpty(status))
             {
                 // add to archive table first - do so BEFORE deleting from main table in case archived creation fails, otherwise data integrity is broken
                 ArchiveUser newArchiveUser = new ArchiveUser(archiveThisUser);
@@ -151,8 +187,10 @@ namespace UserDomain.ControlModule
 
                 // now can delete from main
                 await DeleteUser(archiveThisUser);
-
             }
+
+
+        
 
 
             return status;
@@ -172,15 +210,12 @@ namespace UserDomain.ControlModule
         public async Task<string> UpdateUser(PrimeUser updateUser, bool reload = true)
         {
             string status = System.String.Empty;
-            PrimeUserCollection primeUsers = await LoadCollection(reload);
-            ArchiveUserCollection archiveUsers = await LoadArchiveCollection(reload);
-            // uniqueness check first
-            List<PrimeUser> duplicates = primeUsers.Where(x => (x.Code == updateUser.Code || x.Tag == updateUser.Tag) && x.Id != updateUser.Id).ToList();
-            List<ArchiveUser> archivedDuplicates = archiveUsers.Where(x => (x.Code == updateUser.Code || x.Tag == updateUser.Tag) && x.Id != updateUser.Id).ToList();
-
-            if (duplicates.Count > 0) status = Properties.strings.DuplicateUserTagStatus;
-            else if (archivedDuplicates.Count > 0) status = Properties.strings.DuplicateArchivedUserTagStatus;
-            else await primeUserManager.UpdateSingleItem(updateUser);
+           
+            status = await CheckForDuplicates(updateUser, reload, false);
+            if (string.IsNullOrEmpty(status))
+            {
+                await primeUserManager.UpdateSingleItem(updateUser);
+            }
 
             return status;
         }
@@ -332,5 +367,22 @@ namespace UserDomain.ControlModule
 
 
         }
+
+        private async Task<string> CheckForDuplicates(PrimeUser primeUser, bool reload, bool archiveOnly)
+        {
+            string status = String.Empty;
+            PrimeUserCollection primeUsers = await LoadCollection(reload);
+            ArchiveUserCollection archiveUsers = await LoadArchiveCollection(reload);
+
+            List<PrimeUser> duplicates = primeUsers.Where(x => (x.Code == primeUser.Code || x.Tag == primeUser.Tag) && x.Id != primeUser.Id).ToList();
+            List<ArchiveUser> archivedDuplicates = archiveUsers.Where(x => (x.Code == primeUser.Code || x.Tag == primeUser.Tag) && x.Id != primeUser.Id).ToList();
+
+            if (duplicates.Count > 0 && archiveOnly == false) status = Properties.strings.DuplicateUserTagStatus;
+            else if (archivedDuplicates.Count > 0) status = Properties.strings.DuplicateArchivedUserTagStatus;
+
+            return status;
+        }
     }
+    
+
 }
