@@ -45,16 +45,41 @@ namespace RankingDomain.ControlModule
 
             return ranks;
         }
+
         #endregion Load Methods
 
-        public Task<string> ArchiveRank(Rank newRank, bool reload = true)
+        public async Task<string> ArchiveRank(Rank currentRank, bool reload = true)
         {
-            throw new NotImplementedException();
+            string status = System.String.Empty;
+            
+            // When we create a rank we set the archived_date of the existing record to the modified_date of the existing record and update the modified date as to when it occurred 
+
+
+
+
+
+            return status;
         }
 
-        public Task<string> CreateRank(Rank newRank, bool reload = true)
+        public async Task<string> CreateRank(Rank newRank, bool reload = true)
         {
-            throw new NotImplementedException();
+            string status = System.String.Empty;
+            RankingCollection liveRanks = await LoadCollection(reload);
+
+            // When adding a new rank we want to archive any existing
+            Rank existingRank = await GetFromGuid(newRank.Id);
+            if (existingRank != null)
+            {
+                await ArchiveRank(existingRank, false);
+            }
+
+            // Then create the new Rank
+            liveRanks.Add(newRank);
+            await rankManager.InsertSingleItem(newRank);
+
+            // Double action when we create we also generate a historical archive record with a link.. this will initially have no archive date.
+            // Note that the table key is the user id and the modified date
+            return status;
         }
 
         public Task<string> DeleteRank(Rank deleteRank, bool reload = true)
