@@ -16,8 +16,7 @@ namespace RankingDomain.ControlModule
     {
         private IRepositoryFactory fact;
         private IRepositoryManager<Rank> rankManager;
-        //private IRepositoryManager<ArchiveUser> archiveUserManager;
-        private IDbUtility dbUtility;
+        //private IDbUtility dbUtility;
         private IDbUtilityFactory dbUtilityFactory;
         private RankingCollection ranks = new RankingCollection();
 
@@ -28,6 +27,7 @@ namespace RankingDomain.ControlModule
             envParms.ConnectionString = "Host=localhost;Username=postgres;Password=modena;Database=UserDb";
             envParms.DatabaseType = "PostgreSQL";
             dbUtilityFactory = new PgUtilityFactory(envParms, null);
+            rankManager = new RepositoryManager<Rank>(dbUtilityFactory, envParms);
 
             fact = new RepositoryFactory(dbUtilityFactory, envParms);
         }
@@ -41,25 +41,12 @@ namespace RankingDomain.ControlModule
                 await rankManager.LoadCollection();
             }
 
-            if(ranks == null) ranks = new RankingCollection();
+            if (ranks == null) ranks = new RankingCollection();
 
             return ranks;
         }
 
         #endregion Load Methods
-
-        public async Task<string> ArchiveRank(Rank currentRank, bool reload = true)
-        {
-            string status = System.String.Empty;
-            
-            // When we create a rank we set the archived_date of the existing record to the modified_date of the existing record and update the modified date as to when it occurred 
-
-
-
-
-
-            return status;
-        }
 
         public async Task<string> CreateRank(Rank newRank, bool reload = true)
         {
@@ -70,7 +57,7 @@ namespace RankingDomain.ControlModule
             Rank existingRank = await GetFromGuid(newRank.Id);
             if (existingRank != null)
             {
-                await ArchiveRank(existingRank, false);
+               // await ArchiveRank(existingRank, false);
             }
 
             // Then create the new Rank

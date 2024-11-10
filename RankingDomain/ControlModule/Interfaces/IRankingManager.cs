@@ -11,8 +11,6 @@ namespace RankingDomain.ControlModule.Interfaces
     {
         public Task<string> CreateRank(Rank newRank, bool reload = true);
 
-        public Task<string> ArchiveRank(Rank newRank, bool reload = true);
-
         public Task<string> UpdateRank(Rank newRank, bool reload = true);
 
         public Task<string> DeleteRank(Rank deleteRank, bool reload = true);
