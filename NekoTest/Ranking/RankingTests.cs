@@ -1,18 +1,26 @@
 using RankingDomain.ControlModule;
 using RankingDomain.Model;
 
-namespace NekoTest
+namespace NekoTest.Ranking
 {
     [TestClass]
     public class RankingTests
     {
+        private RankingManager _rankingManager = new RankingManager();
+        private string TEST_NAME = "TESTRANK";
+
+        [TestCleanup()]
+        public void ClassCleanup()
+        {
+           
+        }
         [TestMethod]
         public void LoadFromIdTest()
         {
             // Note this will have to be done in order in test alonng with other 
             // wipeable test data
-            RankingManager? rankingManager = new RankingManager();
-            Task<Rank> rank = rankingManager.GetFromGuid(new Guid("6269941b-58ec-4f3a-bd4c-98b94fae3fc6"));
+            
+            Task<Rank> rank = _rankingManager.GetFromGuid(new Guid("6269941b-58ec-4f3a-bd4c-98b94fae3fc6"));
 
             if (rank == null)
             {
@@ -28,19 +36,18 @@ namespace NekoTest
         [TestMethod]
         public async Task CreateTestRank()
         {
-            RankingManager? rankingManager = new RankingManager();
             Rank testRank = new Rank();
             testRank.Id = Guid.NewGuid();
             testRank.Name = "TESTRANK";
             testRank.Rating = 1600;
             testRank.Deviation = 200;
             testRank.Volatility = 4.0m;
-            
+
             // Act
-            await rankingManager.CreateRank(testRank);
+            await _rankingManager.CreateRank(testRank);
 
             // Get
-            Task<Rank> rank =  rankingManager.GetFromGuid(testRank.Id);
+            Task<Rank> rank = _rankingManager.GetFromGuid(testRank.Id);
 
             // Assert
             Assert.AreEqual(testRank.Id, rank.Result.Id);
@@ -49,5 +56,7 @@ namespace NekoTest
             Assert.AreEqual(testRank.Deviation, rank.Result.Deviation);
             Assert.AreEqual(testRank.Volatility, rank.Result.Volatility);
         }
+
+
     }
 }

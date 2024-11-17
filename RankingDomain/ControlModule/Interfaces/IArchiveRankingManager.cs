@@ -16,5 +16,7 @@ namespace RankingDomain.ControlModule.Interfaces
         public Task<string> DeleteArchiveRank(ArchiveRank deleteRank, bool reload = true);
 
         public Task<string> SaveArchiveRank(ArchiveRank saveRank, bool reload = true);
+
+        public Task<string> DeleteArchiveRankName(string test_name, bool reload = true);
     }
 }

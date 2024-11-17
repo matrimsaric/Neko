@@ -15,7 +15,7 @@ using TableAttribute = ServerCommonModule.Attributes.TableAttribute;
 
 namespace RankingDomain.Model
 {
-    [Table("usr_rating")]
+    [Table("usr_rating_history")]
     [HasModifiedDate(true)]
     public class ArchiveRank : ModelEntry
     {
@@ -27,10 +27,9 @@ namespace RankingDomain.Model
         public decimal Volatility { get; set; }
 
         [FieldName("link_id"), FieldType(SqlDbType.UniqueIdentifier)]
-        public decimal UniqueIdentifier { get; set; }
+        public Guid UniqueIdentifier { get; set; }
 
-        [FieldName("archived_date"), FieldType(SqlDbType.UniqueIdentifier)]
-        public DateTime ArchivedDate { get; set; }
+
         public ArchiveRank()
         {
 

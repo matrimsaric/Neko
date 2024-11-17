@@ -19,7 +19,7 @@ namespace RankingDomain.ControlModule
         //private IDbUtility dbUtility;
         private IDbUtilityFactory dbUtilityFactory;
         private RankingCollection ranks = new RankingCollection();
-
+        private ArchiveManager archiveManager = new ArchiveManager();
 
         public RankingManager()
         {
@@ -57,15 +57,12 @@ namespace RankingDomain.ControlModule
             Rank existingRank = await GetFromGuid(newRank.Id);
             if (existingRank != null)
             {
-               // await ArchiveRank(existingRank, false);
+               await archiveManager.CreateArchiveRank (existingRank);
             }
 
             // Then create the new Rank
             liveRanks.Add(newRank);
             await rankManager.InsertSingleItem(newRank);
-
-            // Double action when we create we also generate a historical archive record with a link.. this will initially have no archive date.
-            // Note that the table key is the user id and the modified date
             return status;
         }
 
@@ -88,6 +85,17 @@ namespace RankingDomain.ControlModule
         public Task<string> UpdateRank(Rank newRank, bool reload = true)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<string> DeleteRankName(string test_name, bool reload = true)
+        {
+            RankingCollection ranks = await LoadCollection(reload);
+
+            foreach (var rank in ranks.Where(x => x.Name == test_name))
+            {
+                await rankManager.DeleteSingleItem(rank);
+            }
+            return "Done";
         }
     }
 }
