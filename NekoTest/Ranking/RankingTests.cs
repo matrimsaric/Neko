@@ -1,5 +1,11 @@
 using RankingDomain.ControlModule;
 using RankingDomain.Model;
+using ServerCommonModule.Control.Procedures;
+using ServerCommonModule.Control;
+using ServerCommonModule.Database.Interfaces;
+using ServerCommonModule.Database;
+using System.Data;
+using NuGet.Frameworks;
 
 namespace NekoTest.Ranking
 {
@@ -9,11 +15,6 @@ namespace NekoTest.Ranking
         private RankingManager _rankingManager = new RankingManager();
         private string TEST_NAME = "TESTRANK";
 
-        [TestCleanup()]
-        public void ClassCleanup()
-        {
-           
-        }
         [TestMethod]
         public void LoadFromIdTest()
         {
@@ -55,6 +56,34 @@ namespace NekoTest.Ranking
             Assert.AreEqual(testRank.Rating, rank.Result.Rating);
             Assert.AreEqual(testRank.Deviation, rank.Result.Deviation);
             Assert.AreEqual(testRank.Volatility, rank.Result.Volatility);
+        }
+
+        [TestMethod]
+        public async Task TestTidy()
+        {
+            IEnvironmentalParameters envParms = new EnvironmentalParameters();
+            envParms.ConnectionString = "Host=localhost;Username=postgres;Password=modena;Database=UserDb";// TODO Note we need a much better single mechanism to do this for all classes
+            envParms.DatabaseType = "PostgreSQL";
+            IDbUtilityFactory dbUtilityFactory = new PgUtilityFactory(envParms, null);
+
+            DirectAccess directAccess = new DirectAccess(dbUtilityFactory, envParms);
+
+            string sql = "exec test_tidy";
+
+            List<Tuple<string, string, SqlDbType>> dbParameters = new List<Tuple<string, string, SqlDbType>>();
+
+            Tuple<string, string, SqlDbType> targetParam = new Tuple<string, string, SqlDbType>("test_name", "TESTRANK", SqlDbType.NVarChar);
+            dbParameters.Add(targetParam);
+
+            try
+            {
+                await directAccess.ExecuteNonQueryStandAloneProcedure(PROCEDURES.CLEAR_TEST_DATA, null, true, dbParameters);
+            }
+            catch(Exception ex)
+            {
+                Assert.Fail($" Test clean up threw an exception {ex.Message}");
+            }
+            
         }
 
 

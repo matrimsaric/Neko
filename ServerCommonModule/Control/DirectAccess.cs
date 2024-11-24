@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -26,7 +27,7 @@ namespace ServerCommonModule.Control
 
         }
 
-        public async Task ExecuteNonQueryStandAloneProcedure(PROCEDURES procedureRequested, IDbTransaction transaction, List<Tuple<string,string, SqlDbType>> partialQueryParameters = null)
+        public async Task ExecuteNonQueryStandAloneProcedure(PROCEDURES procedureRequested, IDbTransaction transaction, bool forceParams, List<Tuple<string,string, SqlDbType>> partialQueryParameters = null)
         {
             string procedureToRun = permittedProcedures.GetProcedureName(procedureRequested);
 
@@ -38,14 +39,38 @@ namespace ServerCommonModule.Control
 
             using (IDbConnection dbConnection = await _dbUtility.GetConnection())
             {
-                if (transaction != null)
+                if (forceParams)
                 {
-                    await _dbUtility.ExecuteNonQuery(transaction, procedureToRun, allParameters.ToArray());
+                    // only force params for known internal procs. Else must use DbParameter objects
+                    string paramList = String.Empty;
+
+                    foreach(var paramer in allParameters)
+                    {
+                        if (!String.IsNullOrEmpty(paramList))
+                        {
+                            paramList = $"'{paramList}','{paramer.Value.ToString()}'";
+                        }
+                        else
+                        {
+                            paramList = $"'{paramer.Value.ToString()}'";
+                        }
+                        
+                    }
+                    procedureToRun = procedureToRun.Replace("(", "( " + paramList);
+                    await _dbUtility.ExecuteNonQuery(dbConnection, procedureToRun );
                 }
                 else
                 {
-                    await _dbUtility.ExecuteNonQuery(dbConnection, procedureToRun, allParameters.ToArray());
+                    if (transaction != null)
+                    {
+                        await _dbUtility.ExecuteNonQuery(transaction, procedureToRun, allParameters.ToArray());
+                    }
+                    else
+                    {
+                        await _dbUtility.ExecuteNonQuery(dbConnection, procedureToRun, allParameters.ToArray());
+                    }
                 }
+                
             }
 
             return;

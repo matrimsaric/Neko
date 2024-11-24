@@ -17,7 +17,7 @@ namespace ServerCommonModule.Control.Procedures
             switch (procedure)
             {
                 case PROCEDURES.CLEAR_TEST_DATA:
-                    return "exec test_tidy";
+                    return "CALL test_tidy();";
             }
             return String.Empty;
         }
