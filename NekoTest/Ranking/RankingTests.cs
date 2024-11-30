@@ -20,7 +20,7 @@ namespace NekoTest.Ranking
         {
             // Note this will have to be done in order in test alonng with other 
             // wipeable test data
-            
+
             Task<Rank> rank = _rankingManager.GetFromGuid(new Guid("6269941b-58ec-4f3a-bd4c-98b94fae3fc6"));
 
             if (rank == null)
@@ -79,13 +79,34 @@ namespace NekoTest.Ranking
             {
                 await directAccess.ExecuteNonQueryStandAloneProcedure(PROCEDURES.CLEAR_TEST_DATA, null, true, dbParameters);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Assert.Fail($" Test clean up threw an exception {ex.Message}");
             }
-            
+
         }
 
+        [TestMethod]
+        public async Task DeleteRank()
+        {
+            Rank testRank = new Rank();
+            testRank.Id = Guid.NewGuid();
+            testRank.Name = "TESTRANK2";
+            testRank.Rating = 1600;
+            testRank.Deviation = 200;
+            testRank.Volatility = 4.0m;
 
+            // Act
+            await _rankingManager.CreateRank(testRank);
+            Task<Rank> rankInitial = _rankingManager.GetFromGuid(testRank.Id);
+            Task<string> deleteResult = _rankingManager.DeleteRank(testRank);
+            Task<Rank> rankDeleted = _rankingManager.GetFromGuid(testRank.Id);
+
+            // Assert
+            Assert.IsNotNull(rankInitial, "Create should have created a new user)");
+            Assert.AreEqual("DONE", deleteResult.Result.ToString().ToUpper(), "Delete should respond with a DONE task if complete");
+            Assert.IsNull(rankDeleted.Result, "Rank should have been removed and returned a null entry");
+
+        }
     }
 }

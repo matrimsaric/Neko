@@ -66,9 +66,15 @@ namespace RankingDomain.ControlModule
             return status;
         }
 
-        public Task<string> DeleteRank(Rank deleteRank, bool reload = true)
+        public async Task<string> DeleteRank(Rank deleteRank, bool reload = true)
         {
-            throw new NotImplementedException();
+            RankingCollection liveRanks = await LoadCollection(reload);
+
+            foreach (var rank in liveRanks.Where(x => x.Id == deleteRank.Id))
+            {
+                await rankManager.DeleteSingleItem(rank);
+            }
+            return "Done";
         }
 
         public async Task<Rank> GetFromGuid(Guid guid, bool reload = true)
