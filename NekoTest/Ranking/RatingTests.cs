@@ -10,9 +10,9 @@ using NuGet.Frameworks;
 namespace NekoTest.Ranking
 {
     [TestClass]
-    public class RankingTests
+    public class RatingTests
     {
-        private RankingManager _rankingManager = new RankingManager();
+        private RatingManager _rankingManager = new RatingManager();
         private string TEST_NAME = "TESTRANK";
 
         [TestMethod]
@@ -21,7 +21,7 @@ namespace NekoTest.Ranking
             // Note this will have to be done in order in test alonng with other 
             // wipeable test data
 
-            Task<Rank> rank = _rankingManager.GetFromGuid(new Guid("6269941b-58ec-4f3a-bd4c-98b94fae3fc6"));
+            Task<Rating> rank = _rankingManager.GetFromGuid(new Guid("6269941b-58ec-4f3a-bd4c-98b94fae3fc6"));
 
             if (rank == null)
             {
@@ -29,7 +29,7 @@ namespace NekoTest.Ranking
             }
             else
             {
-                Assert.IsTrue(rank.Result.Rating == 1500, " Expected rating is 1500 for this test");
+                Assert.IsTrue(rank.Result.RatingValue == 1500, " Expected rating is 1500 for this test");
             }
 
         }
@@ -37,23 +37,23 @@ namespace NekoTest.Ranking
         [TestMethod]
         public async Task CreateTestRank()
         {
-            Rank testRank = new Rank();
+            Rating testRank = new Rating();
             testRank.Id = Guid.NewGuid();
             testRank.Name = "TESTRANK";
-            testRank.Rating = 1600;
+            testRank.RatingValue = 1600;
             testRank.Deviation = 200;
             testRank.Volatility = 4.0m;
 
             // Act
-            await _rankingManager.CreateRank(testRank);
+            await _rankingManager.CreateRating(testRank);
 
             // Get
-            Task<Rank> rank = _rankingManager.GetFromGuid(testRank.Id);
+            Task<Rating> rank = _rankingManager.GetFromGuid(testRank.Id);
 
             // Assert
             Assert.AreEqual(testRank.Id, rank.Result.Id);
             Assert.AreEqual(testRank.Name, rank.Result.Name);
-            Assert.AreEqual(testRank.Rating, rank.Result.Rating);
+            Assert.AreEqual(testRank.RatingValue, rank.Result.RatingValue);
             Assert.AreEqual(testRank.Deviation, rank.Result.Deviation);
             Assert.AreEqual(testRank.Volatility, rank.Result.Volatility);
         }
@@ -89,18 +89,18 @@ namespace NekoTest.Ranking
         [TestMethod]
         public async Task DeleteRank()
         {
-            Rank testRank = new Rank();
+            Rating testRank = new Rating();
             testRank.Id = Guid.NewGuid();
             testRank.Name = "TESTRANK2";
-            testRank.Rating = 1600;
+            testRank.RatingValue = 1600;
             testRank.Deviation = 200;
             testRank.Volatility = 4.0m;
 
             // Act
-            await _rankingManager.CreateRank(testRank);
-            Task<Rank> rankInitial = _rankingManager.GetFromGuid(testRank.Id);
-            Task<string> deleteResult = _rankingManager.DeleteRank(testRank);
-            Task<Rank> rankDeleted = _rankingManager.GetFromGuid(testRank.Id);
+            await _rankingManager.CreateRating(testRank);
+            Task<Rating> rankInitial = _rankingManager.GetFromGuid(testRank.Id);
+            Task<string> deleteResult = _rankingManager.DeleteRating(testRank);
+            Task<Rating> rankDeleted = _rankingManager.GetFromGuid(testRank.Id);
 
             // Assert
             Assert.IsNotNull(rankInitial, "Create should have created a new user)");

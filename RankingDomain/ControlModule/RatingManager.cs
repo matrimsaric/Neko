@@ -12,49 +12,49 @@ using System.Threading.Tasks;
 
 namespace RankingDomain.ControlModule
 {
-    public class RankingManager : IRankingManager, IRankingGets
+    public class RatingManager : IRatingManager, IRatingGets
     {
         private IRepositoryFactory fact;
-        private IRepositoryManager<Rank> rankManager;
+        private IRepositoryManager<Rating> rankManager;
         //private IDbUtility dbUtility;
         private IDbUtilityFactory dbUtilityFactory;
-        private RankingCollection ranks = new RankingCollection();
+        private RatingCollection ranks = new RatingCollection();
         private ArchiveManager archiveManager = new ArchiveManager();
 
-        public RankingManager()
+        public RatingManager()
         {
             IEnvironmentalParameters envParms = new EnvironmentalParameters();
             envParms.ConnectionString = "Host=localhost;Username=postgres;Password=modena;Database=UserDb";
             envParms.DatabaseType = "PostgreSQL";
             dbUtilityFactory = new PgUtilityFactory(envParms, null);
-            rankManager = new RepositoryManager<Rank>(dbUtilityFactory, envParms);
+            rankManager = new RepositoryManager<Rating>(dbUtilityFactory, envParms);
 
             fact = new RepositoryFactory(dbUtilityFactory, envParms);
         }
         #region Load Methods
-        private async Task<RankingCollection> LoadCollection(bool reload)
+        private async Task<RatingCollection> LoadCollection(bool reload)
         {
             if (reload || ranks?.Count == 0)
             {
-                ranks = new RankingCollection();
+                ranks = new RatingCollection();
                 rankManager = fact.Get(ranks);
                 await rankManager.LoadCollection();
             }
 
-            if (ranks == null) ranks = new RankingCollection();
+            if (ranks == null) ranks = new RatingCollection();
 
             return ranks;
         }
 
         #endregion Load Methods
 
-        public async Task<string> CreateRank(Rank newRank, bool reload = true)
+        public async Task<string> CreateRating(Rating newRank, bool reload = true)
         {
             string status = System.String.Empty;
-            RankingCollection liveRanks = await LoadCollection(reload);
+            RatingCollection liveRanks = await LoadCollection(reload);
 
             // When adding a new rank we want to archive any existing
-            Rank existingRank = await GetFromGuid(newRank.Id);
+            Rating existingRank = await GetFromGuid(newRank.Id);
             if (existingRank != null)
             {
                await archiveManager.CreateArchiveRank (existingRank);
@@ -66,9 +66,9 @@ namespace RankingDomain.ControlModule
             return status;
         }
 
-        public async Task<string> DeleteRank(Rank deleteRank, bool reload = true)
+        public async Task<string> DeleteRating(Rating deleteRank, bool reload = true)
         {
-            RankingCollection liveRanks = await LoadCollection(reload);
+            RatingCollection liveRanks = await LoadCollection(reload);
 
             foreach (var rank in liveRanks.Where(x => x.Id == deleteRank.Id))
             {
@@ -77,25 +77,25 @@ namespace RankingDomain.ControlModule
             return "Done";
         }
 
-        public async Task<Rank> GetFromGuid(Guid guid, bool reload = true)
+        public async Task<Rating> GetFromGuid(Guid guid, bool reload = true)
         {
-            RankingCollection ranks = await LoadCollection(reload);
+            RatingCollection ranks = await LoadCollection(reload);
             return ranks.FindById(guid);
         }
 
-        public Task<string> SaveRank(Rank saveRank, bool reload = true)
+        public Task<string> SaveRating(Rating saveRank, bool reload = true)
         {
             throw new NotImplementedException();
         }
 
-        public Task<string> UpdateRank(Rank newRank, bool reload = true)
+        public Task<string> UpdateRating(Rating newRank, bool reload = true)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<string> DeleteRankName(string test_name, bool reload = true)
+        public async Task<string> DeleteRatingName(string test_name, bool reload = true)
         {
-            RankingCollection ranks = await LoadCollection(reload);
+            RatingCollection ranks = await LoadCollection(reload);
 
             foreach (var rank in ranks.Where(x => x.Name == test_name))
             {

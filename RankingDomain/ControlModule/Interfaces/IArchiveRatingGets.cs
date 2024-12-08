@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace RankingDomain.ControlModule.Interfaces
 {
-    public interface IArchiveRankingGets
+    public interface IArchiveRatingGets
     {
-        public Task<ArchiveRank> GetFromGuid(Guid guid, bool reload = true);
+        public Task<ArchiveRating> GetFromGuid(Guid guid, bool reload = true);
     }
 }

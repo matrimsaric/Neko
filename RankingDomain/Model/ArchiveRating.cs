@@ -17,10 +17,10 @@ namespace RankingDomain.Model
 {
     [Table("usr_rating_history")]
     [HasModifiedDate(true)]
-    public class ArchiveRank : ModelEntry
+    public class ArchiveRating : ModelEntry
     {
         [FieldName("rating"), FieldType(SqlDbType.Decimal)]
-        public decimal Rating { get; set; }
+        public decimal RatingValue { get; set; }
         [FieldName("deviation"), FieldType(SqlDbType.Decimal)]
         public decimal Deviation { get; set; }
         [FieldName("volatility"), FieldType(SqlDbType.Decimal)]
@@ -30,7 +30,7 @@ namespace RankingDomain.Model
         public Guid UniqueIdentifier { get; set; }
 
 
-        public ArchiveRank()
+        public ArchiveRating()
         {
 
         }
@@ -39,17 +39,17 @@ namespace RankingDomain.Model
         {
             return $@"
 Id: {Id.ToString()}
-Rating {Rating.ToString()} : {Deviation.ToString()} ({Volatility.ToString()})
+Rating {RatingValue.ToString()} : {Deviation.ToString()} ({Volatility.ToString()})
 ";
         }
 
         public override IModelEntry Clone()
         {
-            ArchiveRank clone = new ArchiveRank
+            ArchiveRating clone = new ArchiveRating
             {
                 Id = this.Id,
                 Name = this.Name,
-                Rating = this.Rating,
+                RatingValue = this.RatingValue,
                 Deviation = this.Deviation,
                 Volatility = this.Volatility
             };

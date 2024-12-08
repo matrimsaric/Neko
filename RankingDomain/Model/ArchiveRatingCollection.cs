@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 
 namespace RankingDomain.Model
 {
-    public class RankingCollection : ModelEntryCollection<Rank>
+    public class ArchiveRatingCollection : ModelEntryCollection<ArchiveRating>
     {
-        public RankingCollection()
+        public ArchiveRatingCollection()
         : base(false)    //sorted = true
         {
 
         }
 
-        public override Rank CreateItem()
+        public override ArchiveRating CreateItem()
         {
-            return new Rank();
+            return new ArchiveRating();
         }
 
         public override string GetBaseName()
@@ -30,7 +30,7 @@ namespace RankingDomain.Model
             return base.GetBaseExternalId() + "Id";
         }
 
-        public static implicit operator Task<object>(RankingCollection v)
+        public static implicit operator Task<object>(ArchiveRatingCollection v)
         {
             throw new NotImplementedException();
         }
