@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RankingDomain", "RankingDom
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NekoTest", "NekoTest\NekoTest.csproj", "{E75CC994-0A80-4641-9096-84C93DC9844D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GlickoDomain", "GlickoDomain\GlickoDomain.csproj", "{6661699F-6854-4257-B617-4AE9D4BD8D9F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{E75CC994-0A80-4641-9096-84C93DC9844D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E75CC994-0A80-4641-9096-84C93DC9844D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E75CC994-0A80-4641-9096-84C93DC9844D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6661699F-6854-4257-B617-4AE9D4BD8D9F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6661699F-6854-4257-B617-4AE9D4BD8D9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6661699F-6854-4257-B617-4AE9D4BD8D9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6661699F-6854-4257-B617-4AE9D4BD8D9F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
