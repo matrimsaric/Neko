@@ -20,14 +20,14 @@ namespace GlickoDomain.Model
         {
             if (newWinner == null || newLoser == null) throw new ArgumentNullException("Players records are blank!");
 #pragma warning disable CS8604 // Possible null reference argument. Covered by previous null check
-            if (!ValidPlayer(winner, loser)) throw new ArgumentException("Players winner and loser are the same");
+            if (!ValidPlayer(newWinner, newLoser)) throw new ArgumentException("Players winner and loser are the same");
 #pragma warning restore CS8604 // Possible null reference argument.
             winner = newWinner;
             loser = newLoser;
             isDraw = newIsDraw;
         }
 
-        private static bool ValidPlayer(Rating player1, Rating player2) => player1 != player2;// TODO no id in rating. Think this may be needed
+        private static bool ValidPlayer(Rating player1, Rating player2) => player1.PlayerId != player2.PlayerId;// TODO no id in rating. Think this may be needed
 
         public bool Participated(Rating player) => player == winner || player == loser;
 

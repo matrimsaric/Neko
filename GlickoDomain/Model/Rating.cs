@@ -18,11 +18,15 @@ namespace GlickoDomain.Model
         private readonly RatingGenerator ratingGenerator;
 
         private RESULT Result;
-        internal double Deviation { get; set; }
-        internal double RatingValue { get; set; }
-        internal double Volatility { get; set; }
+        public double Deviation { get; set; }
+        public double RatingValue { get; set; }
+        public double Volatility { get; set; }
 
-        private Guid PlayerId { get; set; }
+        internal double WorkingDeviation { get; set; }
+        internal double WorkingRatingValue { get; set; }
+        internal double WorkingVolatility { get; set; }
+
+        internal Guid PlayerId { get; set; }
 
         internal bool NewPlayer { get; set; }
 
@@ -50,12 +54,29 @@ namespace GlickoDomain.Model
             NewPlayer = false;
         }
 
-        public void GetGlicko2Rating(double rating) => RatingValue = ratingGenerator.ConvertRatingToGlicko2Scale(rating);
+        public double GetGlicko2Rating(double rating) => RatingValue = ratingGenerator.ConvertRatingToGlicko2Scale(rating);
 
         public void SetGlicko2Rating(double rating) => RatingValue = ratingGenerator .ConvertRatingToOriginalGlickoScale (rating);
 
         public double GetGlicko2RatingDeviation() => ratingGenerator.ConvertRatingDeviationToGlicko2Scale(Deviation);
 
         public void SetGlicko2RatingDeviation(double ratingDeviation) => Deviation = ratingGenerator.ConvertRatingDeviationToOriginalGlickoScale(ratingDeviation);
+
+        public void FinalizeRating()
+        {
+            RatingValue = WorkingRatingValue;
+            Deviation = WorkingDeviation;
+            Volatility = WorkingVolatility;
+
+            WorkingRatingValue = 0;
+            WorkingDeviation = 0;
+            WorkingVolatility = 0;
+        }
+
+        public int GetNumberOfResults() => numberOfResults;
+
+        public void IncrementNumberOfResults(int increment) => numberOfResults += increment;
+
+     
     }
 }
