@@ -54,7 +54,7 @@ namespace GlickoDomain.Model
             NewPlayer = false;
         }
 
-        public double GetGlicko2Rating(double rating) => RatingValue = ratingGenerator.ConvertRatingToGlicko2Scale(rating);
+        public double GetGlicko2Rating() => ratingGenerator.ConvertRatingToGlicko2Scale(RatingValue);
 
         public void SetGlicko2Rating(double rating) => RatingValue = ratingGenerator .ConvertRatingToOriginalGlickoScale (rating);
 
@@ -64,8 +64,8 @@ namespace GlickoDomain.Model
 
         public void FinalizeRating()
         {
-            RatingValue = WorkingRatingValue;
-            Deviation = WorkingDeviation;
+            SetGlicko2Rating(WorkingRatingValue);
+            SetGlicko2RatingDeviation(WorkingDeviation);
             Volatility = WorkingVolatility;
 
             WorkingRatingValue = 0;
@@ -77,6 +77,10 @@ namespace GlickoDomain.Model
 
         public void IncrementNumberOfResults(int increment) => numberOfResults += increment;
 
-     
+        public override string ToString()
+        {
+            return $"Rating [{RatingValue}] Deviation [{Deviation}] Volatility [{Volatility}]";
+        }
+
     }
 }

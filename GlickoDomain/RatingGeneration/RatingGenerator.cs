@@ -57,18 +57,26 @@ namespace GlickoDomain.RatingGeneration
             // step 5.4
             while(Math.Abs(B- A) > RATING_DEFAULTS.CONVERGENCE_TOLERANCE)
             {
-                var C = A + ((A - B) * fA / (fB - fA));
-                var fC = F(C, delta, phi, v, a, tau);
-
-                if (fC * fB < 0)
+                double C = A + ((A - B) * fA / (fB - fA));
+                try
                 {
-                    A = B;
-                    fA = fB;
-                }
-                else fA /= 2.0;
+                    double fC = F(C, delta, phi, v, a, tau);
 
-                B = C;
-                fB = fC;
+                    if (fC * fB < 0)
+                    {
+                        A = B;
+                        fA = fB;
+                    }
+                    else fA /= 2.0;
+
+                    B = C;
+                    fB = fC;
+                }
+                catch (Exception ex)
+                {
+                    string t = ex.Message; 
+                }
+               
             }
 
             var newSigma = Math.Exp(A / 2.0);
@@ -84,8 +92,8 @@ namespace GlickoDomain.RatingGeneration
 
             // Store newly calculated rating in working area of object so we dont calculate subsequent calculations against
             // a changing rating
-            player.WorkingRatingValue = (player.RatingValue + Math.Pow(newPhi, 2) * OutcomeBasedRating(player, results));
-            player.WorkingDeviation = ConvertRatingDeviationToOriginalGlickoScale(newPhi);
+            player.WorkingRatingValue = (player.GetGlicko2Rating() + Math.Pow(newPhi, 2) * OutcomeBasedRating(player, results));
+            player.WorkingDeviation = newPhi;
             player.IncrementNumberOfResults(results.Count);
         }
 
@@ -121,11 +129,11 @@ namespace GlickoDomain.RatingGeneration
                 v += (
                     (
                         Math.Pow(G(result.GetOpponent(player).GetGlicko2RatingDeviation()), 2))
-                        * E(player.RatingValue,
-                        result.GetOpponent(player).GetGlicko2Rating(player.RatingValue),
+                        * E(player.GetGlicko2Rating(),
+                        result.GetOpponent(player).GetGlicko2Rating(),
                         result.GetOpponent(player).GetGlicko2RatingDeviation())
-                        * (1.0 - E(player.RatingValue,
-                        result.GetOpponent(player).GetGlicko2Rating(player.RatingValue),
+                        * (1.0 - E(player.GetGlicko2Rating(),
+                        result.GetOpponent(player).GetGlicko2Rating(),
                         result.GetOpponent(player).GetGlicko2RatingDeviation())
                     ));
             }
@@ -157,8 +165,8 @@ namespace GlickoDomain.RatingGeneration
             { 
                 outcomeBasedRating += (G(result.GetOpponent(player).GetGlicko2RatingDeviation())
                     * (result.GetScore(player) - E(
-                        player.RatingValue,
-                        result.GetOpponent(player).RatingValue,
+                        player.GetGlicko2Rating(),
+                        result.GetOpponent(player).GetGlicko2Rating(),
                         result.GetOpponent(player).GetGlicko2RatingDeviation())));  
             }
 
