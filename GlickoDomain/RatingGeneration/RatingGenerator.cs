@@ -24,7 +24,7 @@ namespace GlickoDomain.RatingGeneration
             defaultVolatility = newVolatility;
         }
 
-        public void CalculateNewRating(Rating player, IList<Result> results)
+        public void CalculateNewRating(GlickoRating player, IList<Result> results)
         {
             var phi = player.GetGlicko2RatingDeviation();
             var sigma = player.Volatility;
@@ -105,7 +105,7 @@ namespace GlickoDomain.RatingGeneration
         /// <param name="player"></param>
         /// <param name="results"></param>
         /// <returns></returns>
-        private double Delta(Rating player, IList<Result> results) => V(player, results) * OutcomeBasedRating(player, results);
+        private double Delta(GlickoRating player, IList<Result> results) => V(player, results) * OutcomeBasedRating(player, results);
 
         private static double F(double x, double delta, double phi, double v, double a,double tau)
         {
@@ -120,7 +120,7 @@ namespace GlickoDomain.RatingGeneration
         /// <param name="player"></param>
         /// <param name="results"></param>
         /// <returns></returns>
-        private static double V(Rating player, IEnumerable<Result> results)
+        private static double V(GlickoRating player, IEnumerable<Result> results)
         {
             var v = 0.0;
 
@@ -157,7 +157,7 @@ namespace GlickoDomain.RatingGeneration
         /// <returns></returns>
         private static double E(double playerRating, double opponentRating, double opponentDeviation) => 1.0 / (1.0 + Math.Exp(-1.0 * G(opponentDeviation) * (playerRating - opponentRating)));
 
-        private static double OutcomeBasedRating(Rating player, IEnumerable<Result> results)
+        private static double OutcomeBasedRating(GlickoRating player, IEnumerable<Result> results)
         {
             double outcomeBasedRating = 0;
 

@@ -13,7 +13,7 @@ namespace GlickoDomain.Model
         LOSS = 1,
         UNKNOWN = 2,
     }
-    public class Rating
+    public class GlickoRating
     {
         private readonly RatingGenerator ratingGenerator;
 
@@ -33,7 +33,7 @@ namespace GlickoDomain.Model
 
         private int numberOfResults;
 
-        public Rating(RatingGenerator ratingSystem)
+        public GlickoRating(RatingGenerator ratingSystem)
         {
             ratingGenerator = ratingSystem;
             RatingValue = RATING_DEFAULTS.RATING;
@@ -43,7 +43,7 @@ namespace GlickoDomain.Model
             NewPlayer = true;
         }
 
-        public Rating(RatingGenerator ratingSystem, double initRating, double initDeviation, double initVolatility, Guid playerId)
+        public GlickoRating(RatingGenerator ratingSystem, double initRating, double initDeviation, double initVolatility, Guid playerId)
         {
             ratingGenerator = ratingSystem;
             RatingValue = initRating;

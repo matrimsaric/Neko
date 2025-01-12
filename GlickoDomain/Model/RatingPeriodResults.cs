@@ -11,36 +11,36 @@ namespace GlickoDomain.Model
     public class RatingPeriodResults
     {
         private readonly List<Result> results = new List<Result>();
-        private readonly HashSet<Rating> participants = new HashSet<Rating>();
+        private readonly HashSet<GlickoRating> participants = new HashSet<GlickoRating>();
 
         public RatingPeriodResults()
         { }
 
-        public RatingPeriodResults(HashSet<Rating> competitors)
+        public RatingPeriodResults(HashSet<GlickoRating> competitors)
         {
             participants = competitors;
         }
 
-        public void AddResult(Rating winner, Rating loser)
+        public void AddResult(GlickoRating winner, GlickoRating loser)
         {
             var result = new Result(winner, loser);
             results.Add(result);
         }
 
-        public void AddDraw(Rating player1, Rating player2)
+        public void AddDraw(GlickoRating player1, GlickoRating player2)
         {
             var result = new Result(player1, player2, true);
             results.Add(result);
         }
 
-        public IList<Result> GetResults(Rating player)
+        public IList<Result> GetResults(GlickoRating player)
         {
             var filteredResults = new List<Result>();
             foreach(var result in results) if(result.Participated(player)) filteredResults.Add(result);
             return filteredResults;
         }
 
-        public IEnumerable<Rating> GetParticipants()
+        public IEnumerable<GlickoRating> GetParticipants()
         {
             // TODO Wont the following add duplicates and is that something we are concerned about?
             foreach(var result in results)
@@ -52,7 +52,7 @@ namespace GlickoDomain.Model
             return participants;
         }
 
-        public void AddParticipant(Rating rating) => participants.Add(rating);
+        public void AddParticipant(GlickoRating rating) => participants.Add(rating);
 
         public void Clear() => results.Clear();
 

@@ -7,8 +7,8 @@ Console.WriteLine("Hello, World!");
 // lets create a couple of players and see what result comes back
 RatingGenerator ratingGenerator = new RatingGenerator();
 
-Rating play1 = new Rating(ratingGenerator, 1004, 61, 0.68, Guid.NewGuid());
-Rating play2 = new Rating(ratingGenerator, 1148, 61, 0.68, Guid.NewGuid());
+GlickoRating play1 = new GlickoRating(ratingGenerator, 1004, 61, 0.68, Guid.NewGuid());
+GlickoRating play2 = new GlickoRating(ratingGenerator, 1148, 61, 0.68, Guid.NewGuid());
 
 
 // generate a game

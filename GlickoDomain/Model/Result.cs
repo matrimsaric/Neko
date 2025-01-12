@@ -13,10 +13,10 @@ namespace GlickoDomain.Model
         private const double PointsForDraw = 0.5;
 
         private readonly bool isDraw;
-        private readonly Rating winner;
-        private readonly Rating loser;
+        private readonly GlickoRating winner;
+        private readonly GlickoRating loser;
 
-        public Result(Rating newWinner, Rating newLoser, bool newIsDraw = false)
+        public Result(GlickoRating newWinner, GlickoRating newLoser, bool newIsDraw = false)
         {
             if (newWinner == null || newLoser == null) throw new ArgumentNullException("Players records are blank!");
 #pragma warning disable CS8604 // Possible null reference argument. Covered by previous null check
@@ -27,11 +27,11 @@ namespace GlickoDomain.Model
             isDraw = newIsDraw;
         }
 
-        private static bool ValidPlayer(Rating player1, Rating player2) => player1.PlayerId != player2.PlayerId;// TODO no id in rating. Think this may be needed
+        private static bool ValidPlayer(GlickoRating player1, GlickoRating player2) => player1.PlayerId != player2.PlayerId;// TODO no id in rating. Think this may be needed
 
-        public bool Participated(Rating player) => player == winner || player == loser;
+        public bool Participated(GlickoRating player) => player == winner || player == loser;
 
-        public double GetScore(Rating player)
+        public double GetScore(GlickoRating player)
         {
             double score;
 
@@ -43,9 +43,9 @@ namespace GlickoDomain.Model
             return score;
         }
 
-        public Rating GetOpponent(Rating player)
+        public GlickoRating GetOpponent(GlickoRating player)
         {
-            Rating opponent;
+            GlickoRating opponent;
 
             if (winner == player) opponent = loser;
             else if (loser == player) opponent = winner;
@@ -53,7 +53,7 @@ namespace GlickoDomain.Model
             return opponent;
         }
 
-        public Rating GetWinner() => winner;
-        public Rating GetLoser() => loser;
+        public GlickoRating GetWinner() => winner;
+        public GlickoRating GetLoser() => loser;
     }
 }
