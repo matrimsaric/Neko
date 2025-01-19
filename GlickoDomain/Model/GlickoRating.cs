@@ -30,7 +30,6 @@ namespace GlickoDomain.Model
 
         internal bool NewPlayer { get; set; }
 
-
         private int numberOfResults;
 
         public GlickoRating(RatingGenerator ratingSystem)

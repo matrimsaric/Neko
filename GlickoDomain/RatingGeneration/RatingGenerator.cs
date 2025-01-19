@@ -11,26 +11,50 @@ namespace GlickoDomain.RatingGeneration
     {
         private readonly double tau;
         private readonly double defaultVolatility;
+        public string VerboseWorkings { get; set; }
+        private bool TrackVerbose { get; set; }
 
         public RatingGenerator()
         {
             tau = RATING_DEFAULTS.TAU ;
             defaultVolatility = RATING_DEFAULTS.VOLATILITY;
+            VerboseWorkings = String.Empty;
+            TrackVerbose = false;
         }
 
         public RatingGenerator(double newVolatility, double newTau)
         {
             tau = newTau;
             defaultVolatility = newVolatility;
+            VerboseWorkings = String.Empty;
+            TrackVerbose = false;
+        }
+
+        private void UpdateVerboseWorkings(string title, object occurrence)
+        {
+            if (TrackVerbose)
+            {
+                VerboseWorkings += $"{String.Format("{0,-27}", title)} : {occurrence.ToString()}{System.Environment.NewLine}";
+            }
+        }
+         
+        public void SetVerbose(bool verbose)
+        {
+            TrackVerbose = verbose;
         }
 
         public void CalculateNewRating(GlickoRating player, IList<Result> results)
         {
             var phi = player.GetGlicko2RatingDeviation();
+            UpdateVerboseWorkings("PH (Deviation)", phi);
             var sigma = player.Volatility;
+            UpdateVerboseWorkings("SIGMA (Volatility) ", sigma);
             var a = Math.Log(Math.Pow(sigma, 2));
+            UpdateVerboseWorkings("a (SIGMA POW)", phi);
             var delta = Delta(player, results);
+            UpdateVerboseWorkings("DELTA (V * outcomeRating)", delta);
             var v = V(player, results);
+            UpdateVerboseWorkings("V",delta);
 
             // step 5.2 - set the initial value of the iterative algorithm to come in step 5.4
             var A = a;
@@ -80,20 +104,25 @@ namespace GlickoDomain.RatingGeneration
             }
 
             var newSigma = Math.Exp(A / 2.0);
+            UpdateVerboseWorkings("new Sigma", newSigma);
 
             player.WorkingVolatility = newSigma;
 
             // Step 6
             var phiStar = CalculateNewRatingDeviation(phi, newSigma);
+            UpdateVerboseWorkings("Step 6 phiStar", phiStar);
 
             // Step 7
             var newPhi = 1.0 / Math.Sqrt((1.0 / Math.Pow(phiStar, 2)) + (1.0 / v));
+            UpdateVerboseWorkings("new Phi", newPhi);
 
 
             // Store newly calculated rating in working area of object so we dont calculate subsequent calculations against
             // a changing rating
             player.WorkingRatingValue = (player.GetGlicko2Rating() + Math.Pow(newPhi, 2) * OutcomeBasedRating(player, results));
+            UpdateVerboseWorkings("new Rating", player.WorkingRatingValue);
             player.WorkingDeviation = newPhi;
+            UpdateVerboseWorkings("new Deviation", player.WorkingDeviation);
             player.IncrementNumberOfResults(results.Count);
         }
 
