@@ -120,9 +120,9 @@ namespace GlickoDomain.RatingGeneration
             // Store newly calculated rating in working area of object so we dont calculate subsequent calculations against
             // a changing rating
             player.WorkingRatingValue = (player.GetGlicko2Rating() + Math.Pow(newPhi, 2) * OutcomeBasedRating(player, results));
-            UpdateVerboseWorkings("new Rating", player.WorkingRatingValue);
+            UpdateVerboseWorkings("new Rating", ConvertRatingToOriginalGlickoScale(player.WorkingRatingValue));
             player.WorkingDeviation = newPhi;
-            UpdateVerboseWorkings("new Deviation", player.WorkingDeviation);
+            UpdateVerboseWorkings("new Deviation", ConvertRatingDeviationToOriginalGlickoScale(player.WorkingDeviation ));
             player.IncrementNumberOfResults(results.Count);
         }
 
