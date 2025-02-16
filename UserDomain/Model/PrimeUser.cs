@@ -78,6 +78,14 @@ ThumbnailUrl: {ThumbnailUrl},
             return clone;
         }
 
+        public bool ValidateUserFields()
+        {
+            if (Code.Length > 10 || Name.Length > 100 || Tag.Length > 100)
+                return false;
+
+            return true;
+        }
+
 
 
 

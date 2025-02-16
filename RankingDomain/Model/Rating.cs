@@ -28,8 +28,12 @@ namespace RankingDomain.Model
 
         public Rating()
         {
-
+            // in the absence of other data set the defaults TODO allow these to be adjusted
+            RatingValue = 1500;
+            Deviation = 300;
+            Volatility = 0.68M;
         }
+
 
         public override string ToString()
         {
