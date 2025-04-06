@@ -67,6 +67,28 @@ namespace RankingDomain.ControlModule
             return status;
         }
 
+        public async Task<string> CreateConnectedArchiveRank(Rating newRank, Rating currentRating, Guid linkId, string reason, bool reload = true)
+        {
+            ArchiveRatingCollection archiveRanks = await LoadCollection(reload);
+            string status = String.Empty;
+
+            // CHange - dont add archived date, just use modified then we have a history with no buggering about
+            ArchiveRating archiveRank = new ArchiveRating();
+            archiveRank.Id = newRank.Id;
+            archiveRank.UniqueIdentifier = linkId;
+            archiveRank.Name = reason;
+            archiveRank.RatingValue = newRank.RatingValue;
+            archiveRank.Deviation = newRank.Deviation;
+            archiveRank.Volatility = newRank.Volatility;
+            archiveRank.Name = newRank.Name;
+
+            // Then create the new Rank
+            archiveRanks.Add(archiveRank);
+            await archiveManager.InsertSingleItem(archiveRank);
+
+            return status;
+        }
+
         public Task<string> DeleteArchiveRank(ArchiveRating deleteRank, bool reload = true)
         {
             throw new NotImplementedException();

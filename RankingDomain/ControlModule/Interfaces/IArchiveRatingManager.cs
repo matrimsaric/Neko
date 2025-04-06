@@ -11,6 +11,8 @@ namespace RankingDomain.ControlModule.Interfaces
     {
         public Task<string> CreateArchiveRank(Rating newRank, bool reload = true);
 
+        public Task<string> CreateConnectedArchiveRank(Rating newRank, Rating currentRating, Guid linkId, string reason, bool reload = true);
+
         public Task<string> UpdateArchiveRank(ArchiveRating newRank, bool reload = true);
 
         public Task<string> DeleteArchiveRank(ArchiveRating deleteRank, bool reload = true);

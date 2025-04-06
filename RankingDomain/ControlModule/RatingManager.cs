@@ -88,9 +88,45 @@ namespace RankingDomain.ControlModule
             throw new NotImplementedException();
         }
 
-        public Task<string> UpdateRating(Rating newRank, bool reload = true)
+        public async Task<string> UpdateRating(Rating newRank, Guid linkId, string sReason, bool reload = true)
         {
-            throw new NotImplementedException();
+            // first up get current rating as we want to archive
+            Task<Rating> currentRating = GetFromGuid(newRank.Id);
+            bool runCreate = false;
+
+            if(currentRating.Result == null)
+            {
+                // run create instead
+                runCreate = true;
+              
+            }
+
+            if (!runCreate)
+            {
+                string archiveCurrent = await archiveManager.CreateConnectedArchiveRank(newRank, currentRating.Result, linkId, sReason, reload);
+
+                if (!String.IsNullOrEmpty(archiveCurrent))
+                {
+                    return "Cannot update rating as archiving process failed: " + archiveCurrent;
+                }
+            }
+           
+
+            // need to update existing rating TODO
+            if (runCreate)
+            {
+                await CreateRating(newRank);
+                return "created new rating, rating does not exist";
+            }
+            else
+            {
+                await rankManager.UpdateSingleItem(newRank);
+            }
+
+                return "done";
+
+
+            
         }
 
         public async Task<string> DeleteRatingName(string test_name, bool reload = true)
